@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: mqtt-lite-influxdb
+    runtime: image
+    image:
+      url: docker.io/library/influxdb:2.7.4
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: DOCKER_INFLUXDB_INIT_MODE
+        value: setup
+      - key: DOCKER_INFLUXDB_INIT_USERNAME
+        value: admin
+      - key: DOCKER_INFLUXDB_INIT_PASSWORD
+        value: admin123456
+      - key: DOCKER_INFLUXDB_INIT_ORG
+        value: statsmqtt
+      - key: DOCKER_INFLUXDB_INIT_BUCKET
+        value: metrics
+      - key: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+        value: statsmqtt-admin-token-2024
+    disk:
+      name: influxdb-data
+      mountPath: /var/lib/influxdb2
+      sizeGB: 10
