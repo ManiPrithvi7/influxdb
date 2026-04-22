@@ -1,7 +1,7 @@
 services:
   influxdb:
     image: influxdb:2.7.4
-    container_name: mqtt-lite-influxdb
+    container_name: proof-influxdb
     restart: unless-stopped
     ports:
       - "8086:8086"
@@ -23,3 +23,5 @@ services:
 
 volumes:
   influxdb-data:
+
+
