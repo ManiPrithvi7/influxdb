@@ -1,12 +1,9 @@
-# Render Blueprint spec: https://render.com/docs/blueprint-spec
+# Blueprint spec: https://render.com/docs/blueprint-spec
 #
-# WHY YOU STILL SEE `go build`: Git pushes only redeploy the *existing* Web Service.
-# If that service was created as native Go, Render keeps using Go until the service
-# runtime is Docker. The dashboard cannot change runtime today — use ONE of:
-#   • Blueprints → New Blueprint Instance → repo ManiPrithvi7/influxdb → Sync
-#     (service `name` below must match an existing service name to update it), OR
-#   • Render API Update Service with runtime=docker, OR
-#   • Delete the Go service → New Web Service → Language "Docker" → same repo.
+# This file applies only after you link it with Dashboard → Blueprints (IaC).
+# A normal Web Service hooked to Git does NOT read render.yaml — see RENDER_DEPLOY.md
+# if logs still show `go build` (native Go runtime). Disable auto-deploy on that old
+# service once Blueprint/Docker service exists so pushes stop triggering Go builds.
 #
 # InfluxDB listens on Render PORT via INFLUXD_HTTP_BIND_ADDRESS (not default 8086).
 # Secrets: set DOCKER_INFLUXDB_INIT_PASSWORD and DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
