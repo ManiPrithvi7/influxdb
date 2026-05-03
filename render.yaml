@@ -1,24 +1,40 @@
+# Render Blueprint: https://docs.render.com/docs/infrastructure-as-code
+# Deploy: connect this repo in Render → New Blueprint → select render.yaml
+#
+# InfluxDB must listen on Render's PORT (not 8086). Password and admin token
+# are dashboard secrets (sync: false)—set them when the service is created.
+#
+# Persistence: data lives under disk.mountPath (/var/lib/influxdb2). Render keeps
+# that disk across restarts and redeploys (only paths on the disk persist—the
+# rest of the filesystem is ephemeral). Do not scale past one instance when a
+# disk is attached. DOCKER_INFLUXDB_INIT_* runs only on first empty startup.
 services:
   - type: web
-    name: mqtt-lite-influxdb
+    name: proof-influxdb
     runtime: image
     image:
       url: docker.io/library/influxdb:2.7.4
     plan: starter
+    numInstances: 1
+    maxShutdownDelaySeconds: 120
     healthCheckPath: /health
     envVars:
+      - key: PORT
+        value: "10000"
+      - key: INFLUXD_HTTP_BIND_ADDRESS
+        value: ":10000"
       - key: DOCKER_INFLUXDB_INIT_MODE
         value: setup
       - key: DOCKER_INFLUXDB_INIT_USERNAME
         value: admin
       - key: DOCKER_INFLUXDB_INIT_PASSWORD
-        value: admin123456
+        sync: false
       - key: DOCKER_INFLUXDB_INIT_ORG
         value: statsmqtt
       - key: DOCKER_INFLUXDB_INIT_BUCKET
         value: metrics
       - key: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
-        value: statsmqtt-admin-token-2024
+        sync: false
     disk:
       name: influxdb-data
       mountPath: /var/lib/influxdb2

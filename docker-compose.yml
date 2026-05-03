@@ -9,9 +9,9 @@ services:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=admin
       - DOCKER_INFLUXDB_INIT_PASSWORD=admin123456
-      - DOCKER_INFLUXDB_INIT_ORG=statsmqtt
-      - DOCKER_INFLUXDB_INIT_BUCKET=metrics
-      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=statsmqtt-admin-token-2024
+      - DOCKER_INFLUXDB_INIT_ORG=proof
+      - DOCKER_INFLUXDB_INIT_BUCKET=proof-metrics
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=proof-admin-token-2024
     volumes:
       - influxdb-data:/var/lib/influxdb2
     healthcheck:
