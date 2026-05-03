@@ -1,5 +1,7 @@
 # Render Blueprint: https://docs.render.com/docs/infrastructure-as-code
-# Deploy: connect this repo in Render → New Blueprint → select render.yaml
+# Deploy: Render Dashboard → Blueprints → apply this repo (or New Web Service →
+# Docker, same Dockerfile). If logs show `go build`, the service is still set to
+# Go—delete it and recreate from this Blueprint or switch Runtime to Docker.
 #
 # InfluxDB must listen on Render's PORT (not 8086). Password and admin token
 # are dashboard secrets (sync: false)—set them when the service is created.
@@ -11,9 +13,8 @@
 services:
   - type: web
     name: proof-influxdb
-    runtime: image
-    image:
-      url: docker.io/library/influxdb:2.7.4
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     plan: starter
     numInstances: 1
     maxShutdownDelaySeconds: 120
