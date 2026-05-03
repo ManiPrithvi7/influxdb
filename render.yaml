@@ -1,18 +1,25 @@
-# Render Blueprint: https://docs.render.com/docs/infrastructure-as-code
-# Deploy: Render Dashboard → Blueprints → apply this repo (or New Web Service →
-# Docker, same Dockerfile). If logs show `go build`, the service is still set to
-# Go—delete it and recreate from this Blueprint or switch Runtime to Docker.
+# Render Blueprint spec: https://render.com/docs/blueprint-spec
 #
-# InfluxDB must listen on Render's PORT (not 8086). Password and admin token
-# are dashboard secrets (sync: false)—set them when the service is created.
+# WHY YOU STILL SEE `go build`: Git pushes only redeploy the *existing* Web Service.
+# If that service was created as native Go, Render keeps using Go until the service
+# runtime is Docker. The dashboard cannot change runtime today — use ONE of:
+#   • Blueprints → New Blueprint Instance → repo ManiPrithvi7/influxdb → Sync
+#     (service `name` below must match an existing service name to update it), OR
+#   • Render API Update Service with runtime=docker, OR
+#   • Delete the Go service → New Web Service → Language "Docker" → same repo.
 #
-# Persistence: data lives under disk.mountPath (/var/lib/influxdb2). Render keeps
-# that disk across restarts and redeploys (only paths on the disk persist—the
-# rest of the filesystem is ephemeral). Do not scale past one instance when a
-# disk is attached. DOCKER_INFLUXDB_INIT_* runs only on first empty startup.
+# InfluxDB listens on Render PORT via INFLUXD_HTTP_BIND_ADDRESS (not default 8086).
+# Secrets: set DOCKER_INFLUXDB_INIT_PASSWORD and DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+# in the dashboard when prompted (sync: false).
+#
+# Persistence: only paths under disk.mountPath survive restarts/redeploys.
 services:
   - type: web
-    name: proof-influxdb
+    # Match your Render dashboard Web Service name exactly so Blueprint sync can
+    # replace Go with Docker on that resource; rename here if yours differs.
+    name: influxdb
+    repo: https://github.com/ManiPrithvi7/influxdb
+    branch: main
     runtime: docker
     dockerfilePath: ./Dockerfile
     plan: starter
