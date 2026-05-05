@@ -1,6 +1,6 @@
 # Official InfluxDB image. Defaults below apply even when Render does not inject
 # every variable from the dashboard/Blueprint (fixes init + port warnings in logs).
-FROM influxdb:2.7.4
+FROM influxdb:2.7.12
 
 COPY influx-entrypoint.sh /influx-entrypoint.sh
 RUN chmod +x /influx-entrypoint.sh
